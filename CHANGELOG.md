@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.1](https://github.com/JustinBeckwith/gongio-mcp/compare/gongio-mcp-v1.1.0...gongio-mcp-v1.1.1) (2025-12-14)
+
+
+### Bug Fixes
+
+* **deps:** update dependency zod to v4 ([#7](https://github.com/JustinBeckwith/gongio-mcp/issues/7)) ([df5200d](https://github.com/JustinBeckwith/gongio-mcp/commit/df5200dd5e215ab42d62e970c4589ae117b20c5a))
+
 ## [1.1.0](https://github.com/JustinBeckwith/gongio-mcp/compare/gongio-mcp-v1.0.1...gongio-mcp-v1.1.0) (2025-12-14)
 
 
