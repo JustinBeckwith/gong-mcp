@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.2.0](https://github.com/JustinBeckwith/gongio-mcp/compare/gongio-mcp-v1.1.1...gongio-mcp-v1.2.0) (2025-12-14)
+
+
+### Features
+
+* add Zod validation and two-tier tool approach ([#13](https://github.com/JustinBeckwith/gongio-mcp/issues/13)) ([34183a9](https://github.com/JustinBeckwith/gongio-mcp/commit/34183a9a4752543ce8ee1e27fd912f5439fb6348))
+
+
+### Bug Fixes
+
+* use GET method for list endpoints per Gong API spec ([#11](https://github.com/JustinBeckwith/gongio-mcp/issues/11)) ([c802d9a](https://github.com/JustinBeckwith/gongio-mcp/commit/c802d9a31aa39b66a9933c0f3c4bccf051d00616))
+
 ## [1.1.1](https://github.com/JustinBeckwith/gongio-mcp/compare/gongio-mcp-v1.1.0...gongio-mcp-v1.1.1) (2025-12-14)
 
 
