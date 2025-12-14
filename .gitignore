@@ -1,0 +1,14 @@
+node_modules
+build
+dist
+.DS_Store
+*.log
+.claude
+coverage
+# Environment files - never commit secrets!
+.env
+.env.*
+!.env.example
+
+# MCP registry token files
+.mcpregistry_*

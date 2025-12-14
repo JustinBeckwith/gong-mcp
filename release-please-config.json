@@ -1,0 +1,22 @@
+{
+	"packages": {
+		".": {
+			"release-type": "node",
+			"package-name": "gong-mcp",
+			"changelog-path": "CHANGELOG.md",
+			"extra-files": [
+				"package.json",
+				{
+					"type": "json",
+					"path": "server.json",
+					"jsonpath": "$.version"
+				},
+				{
+					"type": "json",
+					"path": "server.json",
+					"jsonpath": "$.packages[0].version"
+				}
+			]
+		}
+	}
+}

@@ -1,0 +1,67 @@
+{
+	"name": "gong-mcp",
+	"version": "1.0.0",
+	"description": "MCP server for Gong.io - access calls, transcripts, and users",
+	"mcpName": "io.github.JustinBeckwith/gong-mcp",
+	"type": "module",
+	"main": "dist/index.js",
+	"bin": {
+		"gong-mcp": "dist/index.js"
+	},
+	"files": [
+		"dist"
+	],
+	"scripts": {
+		"preinstall": "node -e \"if(!process.env.npm_execpath.includes('pnpm')){console.error('\\x1b[31mError: Use pnpm instead of npm!\\x1b[0m\\n\\nRun: corepack enable && pnpm install');process.exit(1)}\"",
+		"start": "node --env-file=.env dist/index.js",
+		"dev": "node --env-file=.env --watch --experimental-strip-types src/index.ts",
+		"build": "tsc && chmod 755 dist/index.js",
+		"test": "vitest run",
+		"test:watch": "vitest",
+		"test:coverage": "vitest run --coverage",
+		"lint": "biome lint .",
+		"fix": "biome check --write .",
+		"format": "biome format --write .",
+		"validate:mcp": "node scripts/validate-mcp.js",
+		"prepare": "husky",
+		"typecheck": "tsc --noEmit"
+	},
+	"keywords": [
+		"mcp",
+		"gong",
+		"ai",
+		"claude",
+		"anthropic",
+		"llm"
+	],
+	"author": "Justin Beckwith <justin.beckwith@gmail.com>",
+	"license": "MIT",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/JustinBeckwith/gong-mcp.git"
+	},
+	"bugs": {
+		"url": "https://github.com/JustinBeckwith/gong-mcp/issues"
+	},
+	"homepage": "https://github.com/JustinBeckwith/gong-mcp#readme",
+	"engines": {
+		"node": ">=18.0.0"
+	},
+	"packageManager": "pnpm@9.15.1",
+	"devDependencies": {
+		"@biomejs/biome": "^2.2.7",
+		"@commitlint/cli": "^20.1.0",
+		"@commitlint/config-conventional": "^20.0.0",
+		"@types/node": "^24.9.1",
+		"@vitest/coverage-v8": "^4.0.3",
+		"ajv": "^8.17.1",
+		"ajv-formats": "^3.0.1",
+		"husky": "^9.1.7",
+		"typescript": "^5.9.3",
+		"vitest": "^4.0.2"
+	},
+	"dependencies": {
+		"@modelcontextprotocol/sdk": "^1.20.2",
+		"zod": "^3.25.76"
+	}
+}
