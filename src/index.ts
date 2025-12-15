@@ -90,7 +90,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
       {
         name: "get_call_summary",
         description:
-          "Get a summary of a single call including participants, topics, key points, and action items. Use this after list_calls to get details for a specific call.",
+          "Get an AI-generated summary of a single call including brief overview, key points, topics, action items, and detailed outline. This is the recommended way to understand a call - use get_call_transcript only if you need exact quotes.",
         inputSchema: {
           type: "object",
           properties: {
@@ -106,7 +106,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
       {
         name: "get_call_transcript",
         description:
-          "Get the full transcript for a single call. Returns speaker-attributed conversation text. Only fetch this when you specifically need the transcript content.",
+          "Get the raw transcript for a single call with speaker-attributed text. Only use this when you need exact quotes - prefer get_call_summary for understanding call content. Transcripts are truncated by default (10KB) to prevent context overflow - use maxLength and offset to paginate.",
         inputSchema: {
           type: "object",
           properties: {
@@ -114,6 +114,21 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
               type: "string",
               pattern: "^\\d{1,20}$",
               description: "Gong call ID (numeric string up to 20 digits)",
+            },
+            maxLength: {
+              type: "number",
+              minimum: 1000,
+              maximum: 100000,
+              default: 10000,
+              description:
+                "Maximum characters to return (default: 10000, ~10KB). Longer transcripts are truncated with pagination info.",
+            },
+            offset: {
+              type: "number",
+              minimum: 0,
+              default: 0,
+              description:
+                "Character offset to start from (default: 0). Use to paginate through long transcripts.",
             },
           },
           required: ["callId"],
@@ -197,7 +212,10 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
           content: [
             {
               type: "text",
-              text: formatCallTranscript(transcript, details?.parties),
+              text: formatCallTranscript(transcript, details?.parties, {
+                maxLength: validated.maxLength,
+                offset: validated.offset,
+              }),
             },
           ],
         };

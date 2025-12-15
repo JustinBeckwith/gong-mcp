@@ -314,4 +314,61 @@ describe('formatCallTranscript', () => {
 		const result = formatCallTranscript(transcript, null);
 		expect(result).toContain('First sentence. Second sentence. Third sentence.');
 	});
+
+	it('truncates long transcripts with maxLength', () => {
+		const longText = 'A'.repeat(500);
+		const transcript: CallTranscript = {
+			callId: '123',
+			transcript: [
+				{
+					speakerId: 'speaker-1',
+					sentences: [{ start: 0, end: 5000, text: longText }],
+				},
+				{
+					speakerId: 'speaker-2',
+					sentences: [{ start: 5000, end: 10000, text: longText }],
+				},
+			],
+		};
+
+		const result = formatCallTranscript(transcript, null, { maxLength: 100 });
+		expect(result).toContain('*Showing characters 1-100');
+		expect(result).toContain('*[...truncated...]*');
+		expect(result).toContain('*To see more, use offset: 100*');
+		// Result should be truncated
+		expect(result.length).toBeLessThan(1500); // Much less than the full ~1000 char transcript
+	});
+
+	it('supports pagination with offset', () => {
+		const longText = 'A'.repeat(200);
+		const transcript: CallTranscript = {
+			callId: '123',
+			transcript: [
+				{
+					speakerId: 'speaker-1',
+					sentences: [{ start: 0, end: 5000, text: longText }],
+				},
+			],
+		};
+
+		const result = formatCallTranscript(transcript, null, { maxLength: 100, offset: 50 });
+		expect(result).toContain('*[...truncated start...]*');
+		expect(result).toContain('*Showing characters 51-150');
+	});
+
+	it('does not show truncation messages for short transcripts', () => {
+		const transcript: CallTranscript = {
+			callId: '123',
+			transcript: [
+				{
+					speakerId: 'speaker-1',
+					sentences: [{ start: 0, end: 5000, text: 'Short text.' }],
+				},
+			],
+		};
+
+		const result = formatCallTranscript(transcript, null, { maxLength: 10000 });
+		expect(result).not.toContain('truncated');
+		expect(result).not.toContain('Showing characters');
+	});
 });

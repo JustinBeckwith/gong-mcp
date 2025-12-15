@@ -119,22 +119,52 @@ export function formatCallSummary(call: CallDetails): string {
 	if (call.content?.topics && call.content.topics.length > 0) {
 		lines.push('\n### Topics\n');
 		const topics = call.content.topics.map(
-			(t) => `${escapeMarkdown(t.name)} (${Math.round(t.duration / 60)}m)`,
+			(t) => `${escapeMarkdown(t.name)} (${Math.round((t.duration ?? 0) / 60)}m)`,
 		);
 		lines.push(topics.join(', '));
+	}
+
+	// Outline (detailed section breakdown)
+	if (call.content?.outline && call.content.outline.length > 0) {
+		lines.push('\n### Outline\n');
+		for (const section of call.content.outline) {
+			const duration = section.duration
+				? ` (${Math.round(section.duration / 60)}m)`
+				: '';
+			lines.push(`**${escapeMarkdown(section.section ?? 'Section')}**${duration}`);
+			if (section.items && section.items.length > 0) {
+				for (const item of section.items) {
+					if (item.text) {
+						lines.push(`- ${escapeMarkdown(item.text)}`);
+					}
+				}
+			}
+			lines.push('');
+		}
 	}
 
 	return lines.join('\n');
 }
 
 /**
+ * Options for formatting transcripts with truncation
+ */
+export interface FormatTranscriptOptions {
+	maxLength?: number;
+	offset?: number;
+}
+
+/**
  * Format a single call transcript with speaker names
+ * Supports truncation via maxLength/offset to prevent context overflow
  */
 export function formatCallTranscript(
 	transcript: CallTranscript,
 	parties?: Party[] | null,
+	options?: FormatTranscriptOptions,
 ): string {
-	const lines: string[] = [];
+	const maxLength = options?.maxLength ?? 10000;
+	const offset = options?.offset ?? 0;
 
 	// Build speaker ID to name mapping
 	const speakerNames = new Map<string, string>();
@@ -147,6 +177,17 @@ export function formatCallTranscript(
 		}
 	}
 
+	// Build full transcript first to get total length
+	const fullLines: string[] = [];
+	for (const entry of transcript.transcript) {
+		const speakerName = speakerNames.get(entry.speakerId) ?? `Speaker ${entry.speakerId}`;
+		const text = entry.sentences.map((s) => s.text).join(' ');
+		fullLines.push(`[${escapeMarkdown(speakerName)}]: ${escapeMarkdown(text)}\n`);
+	}
+	const fullText = fullLines.join('\n');
+	const totalLength = fullText.length;
+
+	const lines: string[] = [];
 	lines.push(`## Transcript (Call ${transcript.callId})\n`);
 
 	if (transcript.transcript.length === 0) {
@@ -154,10 +195,26 @@ export function formatCallTranscript(
 		return lines.join('\n');
 	}
 
-	for (const entry of transcript.transcript) {
-		const speakerName = speakerNames.get(entry.speakerId) ?? `Speaker ${entry.speakerId}`;
-		const text = entry.sentences.map((s) => s.text).join(' ');
-		lines.push(`[${escapeMarkdown(speakerName)}]: ${escapeMarkdown(text)}\n`);
+	// Apply offset and maxLength
+	const slicedText = fullText.slice(offset, offset + maxLength);
+
+	// Check if truncated
+	const isTruncatedStart = offset > 0;
+	const isTruncatedEnd = offset + maxLength < totalLength;
+
+	if (isTruncatedStart || isTruncatedEnd) {
+		lines.push(`*Showing characters ${offset + 1}-${Math.min(offset + maxLength, totalLength)} of ${totalLength} total*\n`);
+	}
+
+	if (isTruncatedStart) {
+		lines.push('*[...truncated start...]*\n');
+	}
+
+	lines.push(slicedText);
+
+	if (isTruncatedEnd) {
+		lines.push('\n*[...truncated...]*');
+		lines.push(`\n*To see more, use offset: ${offset + maxLength}*`);
 	}
 
 	return lines.join('\n');

@@ -98,10 +98,26 @@ export const getCallSummaryRequestSchema = z.object({
 export type GetCallSummaryRequest = z.infer<typeof getCallSummaryRequestSchema>;
 
 /**
- * Get call transcript - single call ID
+ * Get call transcript - single call ID with optional truncation
+ * Default maxLength is 10000 characters (~10KB) to prevent context overflow
  */
 export const getCallTranscriptRequestSchema = z.object({
 	callId: gongIdSchema,
+	maxLength: z
+		.number()
+		.int()
+		.min(1000)
+		.max(100000)
+		.default(10000)
+		.describe(
+			'Maximum characters to return (default: 10000). Use offset to paginate through longer transcripts.',
+		),
+	offset: z
+		.number()
+		.int()
+		.min(0)
+		.default(0)
+		.describe('Character offset to start from (default: 0). Use with maxLength to paginate.'),
 });
 
 export type GetCallTranscriptRequest = z.infer<typeof getCallTranscriptRequestSchema>;

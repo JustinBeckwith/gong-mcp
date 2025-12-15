@@ -126,11 +126,33 @@ export class GongClient {
 
 	/**
 	 * Get detailed information about specific calls (POST /v2/calls/extensive)
+	 * Includes AI-generated summaries (brief, keyPoints, outline, topics, actionItems)
 	 */
 	async getCallDetails(callIds: string[]): Promise<CallDetailsResponse> {
 		const body = {
 			filter: {
 				callIds,
+			},
+			contentSelector: {
+				exposedFields: {
+					content: {
+						brief: true,
+						outline: true,
+						keyPoints: true,
+						topics: true,
+						pointsOfInterest: true,
+						callOutcome: true,
+						trackers: true,
+					},
+					parties: true,
+					collaboration: {
+						publicComments: true,
+					},
+					interaction: {
+						speakers: true,
+						questions: true,
+					},
+				},
 			},
 		};
 		const response = await this.request('POST', '/calls/extensive', body);

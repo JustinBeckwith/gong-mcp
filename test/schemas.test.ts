@@ -196,6 +196,72 @@ describe('getCallTranscriptRequestSchema', () => {
 		});
 		expect(result.success).toBe(false);
 	});
+
+	it('applies default maxLength of 10000', () => {
+		const result = getCallTranscriptRequestSchema.safeParse({
+			callId: '123456789',
+		});
+		expect(result.success).toBe(true);
+		if (result.success) {
+			expect(result.data.maxLength).toBe(10000);
+		}
+	});
+
+	it('accepts custom maxLength within bounds', () => {
+		const result = getCallTranscriptRequestSchema.safeParse({
+			callId: '123456789',
+			maxLength: 50000,
+		});
+		expect(result.success).toBe(true);
+		if (result.success) {
+			expect(result.data.maxLength).toBe(50000);
+		}
+	});
+
+	it('rejects maxLength below minimum (1000)', () => {
+		const result = getCallTranscriptRequestSchema.safeParse({
+			callId: '123456789',
+			maxLength: 500,
+		});
+		expect(result.success).toBe(false);
+	});
+
+	it('rejects maxLength above maximum (100000)', () => {
+		const result = getCallTranscriptRequestSchema.safeParse({
+			callId: '123456789',
+			maxLength: 150000,
+		});
+		expect(result.success).toBe(false);
+	});
+
+	it('applies default offset of 0', () => {
+		const result = getCallTranscriptRequestSchema.safeParse({
+			callId: '123456789',
+		});
+		expect(result.success).toBe(true);
+		if (result.success) {
+			expect(result.data.offset).toBe(0);
+		}
+	});
+
+	it('accepts custom offset', () => {
+		const result = getCallTranscriptRequestSchema.safeParse({
+			callId: '123456789',
+			offset: 5000,
+		});
+		expect(result.success).toBe(true);
+		if (result.success) {
+			expect(result.data.offset).toBe(5000);
+		}
+	});
+
+	it('rejects negative offset', () => {
+		const result = getCallTranscriptRequestSchema.safeParse({
+			callId: '123456789',
+			offset: -100,
+		});
+		expect(result.success).toBe(false);
+	});
 });
 
 describe('listUsersRequestSchema', () => {
