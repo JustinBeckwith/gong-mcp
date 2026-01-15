@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.0](https://github.com/JustinBeckwith/gongio-mcp/compare/gongio-mcp-v1.3.0...gongio-mcp-v1.4.0) (2026-01-15)
+
+
+### Features
+
+* implement search_calls tool with advanced filtering ([#22](https://github.com/JustinBeckwith/gongio-mcp/issues/22)) ([c52d5a1](https://github.com/JustinBeckwith/gongio-mcp/commit/c52d5a121547aa381cf71f23edd3d5822ebb7bf5)), closes [#21](https://github.com/JustinBeckwith/gongio-mcp/issues/21)
+
 ## [1.3.0](https://github.com/JustinBeckwith/gongio-mcp/compare/gongio-mcp-v1.2.0...gongio-mcp-v1.3.0) (2025-12-15)
 
 
