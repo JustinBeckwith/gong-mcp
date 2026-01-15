@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.1](https://github.com/JustinBeckwith/gongio-mcp/compare/gongio-mcp-v1.4.0...gongio-mcp-v1.4.1) (2026-01-15)
+
+
+### Bug Fixes
+
+* update MCP schema version to 2025-12-11 ([#24](https://github.com/JustinBeckwith/gongio-mcp/issues/24)) ([67dc47a](https://github.com/JustinBeckwith/gongio-mcp/commit/67dc47a98ccfc9e7f1d42588f9f393a5eac6ca7f)), closes [#21014821339](https://github.com/JustinBeckwith/gongio-mcp/issues/21014821339)
+
 ## [1.4.0](https://github.com/JustinBeckwith/gongio-mcp/compare/gongio-mcp-v1.3.0...gongio-mcp-v1.4.0) (2026-01-15)
 
 
